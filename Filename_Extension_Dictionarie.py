@@ -12,5 +12,6 @@ filename_extension_dictionarie={("png","jpg","jpeg","webp"):"Photos",
                         ("pdf"):"PDFs",
                         ("exe","msi"):"Programmes",
                         ("txt"):"Text files",
-                        ("rar","zip"):"Archive files"
+                        ("rar","zip"):"Archive files",
+                        ("mp3"):"Archive files"
                         }
