@@ -152,6 +152,8 @@ class FRToplevelWindow(CTkToplevel):
         self.config(background=self.color)
         self.minsize(550, 80)
         self.maxsize(550, 80)
+        self.iconbitmap('pngwing.ico')
+        self.title("File renamer")
         self.path_entry = CTkEntry(
             master=self,
             width=385,
@@ -236,6 +238,8 @@ class FSToplevelWindow(CTkToplevel):
         self.search_by_type = BooleanVar()
         self.color = "#5f1842"
         self.config(background=self.color)
+        self.iconbitmap('pngwing.ico')
+        self.title("File search")
         self.minsize(560, 100),
         self.maxsize(560, 100)
         self.path_entry = CTkEntry(
@@ -358,6 +362,8 @@ class EFDToplevelWindow(CTkToplevel):
         self.nested_bool = BooleanVar()
         self.color = "#5f1842"
         self.config(background=self.color)
+        self.iconbitmap('pngwing.ico')
+        self.title("Empty folder deleter")
         self.minsize(560, 100)
         self.maxsize(560, 100)
         self.path_entry = CTkEntry(
@@ -464,6 +470,8 @@ class DMToplevelWindow(CTkToplevel):
         self.path = StringVar()
         self.color = "#5f1842"
         self.config(background=self.color)
+        self.iconbitmap('pngwing.ico')
+        self.title("Folders creator")
         self.minsize(560, 250)
         self.maxsize(560, 250)
         self.path_entry = CTkEntry(
@@ -578,8 +586,10 @@ class OrganizerToplevelWindow(CTkToplevel):
         self.paths = StringVar()
         self.color = "#5f1842"
         self.config(background=self.color)
-        self.minsize(520, 200)
-        self.maxsize(520, 200)
+        self.iconbitmap('pngwing.ico')
+        self.title("Organizer")
+        self.minsize(520, 120)
+        self.maxsize(520, 120)
         self.path_entry = CTkEntry(
             master=self,
             width=300,
@@ -665,8 +675,8 @@ class OrganizerToplevelWindow(CTkToplevel):
         self.combobox.grid(row=1, column=1, columnspan=2, pady=5, padx=2)
         self.del_selected_btn.grid(
             row=2, column=1, columnspan=2, pady=1, padx=2)
-        self.ok_btn.place(x=5, y=150)
-        self.cancel_btn.place(x=90, y=150)
+        self.ok_btn.place(x=5, y=72)
+        self.cancel_btn.place(x=90, y=72)
         self.grab_set()
 
     def path_getter(self):
