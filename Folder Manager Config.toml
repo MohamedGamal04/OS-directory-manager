@@ -1,0 +1,37 @@
+# This is a TOML document
+title = "Folder Manager"
+
+[owner]
+name = "Mohamed Gamal"
+dob = 2004-09-30
+
+[GUI]
+background = "background.png"
+background_geometry = [640, 125]
+icon = 'icon.ico'
+
+[GUI.Geometry]
+minsize = [640, 125]
+maxsize = [640, 125]
+
+[GUI.Buttons]
+color = "#02db06"
+font = ["Arial", 20, "bold"]
+hovercolor = "#067d08"
+bordercolor = "black"
+textcolor = "white"
+borderwidth = 1.2
+
+[GUI.Entry]
+color = "#ffffff"
+bordercolor = "#ffffff"
+textcolor = "black"
+font = ["Arial", 15, "bold"]
+
+[GUI.Checkbox]
+font = ["Arial", 20, "bold"]
+
+[GUI.Label]
+color = "#5f1842"
+textcolor = "black"
+font = ["Arial", 15, "bold"]

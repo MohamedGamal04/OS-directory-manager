@@ -2,20 +2,22 @@ from typing import Tuple
 from customtkinter import *
 from tkinter import filedialog, ttk, messagebox
 from PIL import Image
+from Folder_Manager_Config import *
 import webbrowser
 
 
 class App(CTk):
     def __init__(self):
         super().__init__()
-        self.title("Folder Manager")
-        self.minsize(810, 125)
-        self.maxsize(810, 125)
+        self.title(title)
+        self.minsize(minsize[0], minsize[1])
+        self.maxsize(maxsize[0], maxsize[1])
         self.toplevel = None
-        self.iconbitmap('pngwing.ico')
+        self.iconbitmap(icon)
         self.Image = Image.open(
-           "background.png")
-        self.img = CTkImage(self.Image, size=(810, 125))
+            background)
+        self.img = CTkImage(self.Image, size=(
+            background_geometry[0], background_geometry[1]))
         l = CTkLabel(self, text="", image=self.img)
         l.place(x=0, y=0)
         self.organizer_btn = CTkButton(
@@ -23,39 +25,39 @@ class App(CTk):
             width=80,
             height=80,
             text="Organizor",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.organizer,
-            border_color="black",
-            border_width=1.2,
+            border_color=button_bordercolor,
+            border_width=button_borderwidth,
         )
         self.Folders_creator_btn = CTkButton(
             master=self,
             width=80,
             height=80,
             text="Folders creator",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.DirMaker,
-            border_color="black",
-            border_width=1.2,
+            border_color=button_bordercolor,
+            border_width=button_borderwidth,
         )
         self.Empty_Folder_Deleter_btn = CTkButton(
             master=self,
             width=80,
             height=80,
             text="Empty folders deleter",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.EFD,
-            border_color="black",
-            border_width=1.2,
+            border_color=button_bordercolor,
+            border_width=button_borderwidth,
         )
         self.signature = CTkButton(
             master=self,
@@ -65,7 +67,7 @@ class App(CTk):
             fg_color="#641960",
             hover_color="#641960",
             text="https://github.com/MohamedGamal04",
-            font=("Arial", 15, "bold"),
+            font=entry_font,
             command=self.github
         )
         self.File_search_btn = CTkButton(
@@ -73,27 +75,15 @@ class App(CTk):
             width=80,
             height=80,
             text="File search",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.FS,
-            border_color="black",
-            border_width=1.2,
+            border_color=button_bordercolor,
+            border_width=button_borderwidth,
         )
-        self.Folder_renamer_btn = CTkButton(
-            master=self,
-            width=80,
-            height=80,
-            text="Folder renamer",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
-            command=self.FR,
-            border_color="black",
-            border_width=1.2,
-        )
+
         self.logo = CTkImage(Image.open(
             "logo.png"), size=(35, 35))
         self.github_logo = CTkLabel(
@@ -105,8 +95,6 @@ class App(CTk):
             row=0, column=3, sticky=S, pady=18, padx=5)
         self.File_search_btn.grid(
             row=0, column=4, sticky=S, pady=18, padx=5)
-        self.Folder_renamer_btn.grid(
-            row=0, column=5, sticky=S, pady=18, padx=5)
         self.github_logo.place(x=0, y=98)
         self.signature.place(x=30, y=100)
 
@@ -134,100 +122,8 @@ class App(CTk):
         else:
             self.toplevel.focus()
 
-    def FR(self):
-        if self.toplevel is None or not self.toplevel.winfo_exists():
-            self.toplevel = FRToplevelWindow(self)
-        else:
-            self.toplevel.focus()
-
     def github(self):
         webbrowser.open("https://github.com/MohamedGamal04")
-
-
-class FRToplevelWindow(CTkToplevel):
-    def __init__(self, *args, fg_color: str | Tuple[str, str] | None = None, **kwargs):
-        super().__init__(*args, fg_color=fg_color, **kwargs)
-        self.path = StringVar()
-        self.color = "#5f1842"
-        self.config(background=self.color)
-        self.minsize(550, 80)
-        self.maxsize(550, 80)
-        self.iconbitmap('pngwing.ico')
-        self.title("File renamer")
-        self.path_entry = CTkEntry(
-            master=self,
-            width=385,
-            height=30,
-            fg_color="#ffffff",
-            border_color="#ffffff",
-            text_color="black",
-            font=("Arial", 15, "bold"),
-            textvariable=self.path
-        )
-        self.open_dir_btn = CTkButton(
-            master=self,
-            width=50,
-            height=30,
-            text="Open directory",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
-            command=self.path_getter,
-        )
-        self.ok_btn = CTkButton(
-            master=self,
-            width=50,
-            height=30,
-            text="Ok",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
-            command=self.ok_destroy,
-        )
-        self.cancel_btn = CTkButton(
-            master=self,
-            width=50,
-            height=30,
-            text="Cancel",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
-            command=self.destroy,
-        )
-        self.ok_btn.place(x=390, y=40)
-        self.cancel_btn.place(x=470, y=40)
-        self.path_entry.grid(row=0, column=0, columnspan=2,
-                             sticky=W, pady=2, padx=2)
-        self.open_dir_btn.grid(row=0, column=2, sticky=W, pady=2, padx=2)
-        self.grab_set()
-
-    def path_getter(self):
-        global path
-        self.path_entry.configure(textvariable=self.path)
-        path = filedialog.askdirectory()
-        self.path.set(path)
-        paths.clear()
-        paths.append(path)
-
-    def ok_destroy(self):
-        if not os.path.exists(self.path.get()) and not (self.path.get() == "all"):
-            messagebox.showerror("Path error", "Empty or invalid path")
-        else:
-            if paths == []:
-                paths.append(self.path.get())
-            self.ok_destroy = True
-
-            from FileRenamer import FR
-            FR(paths)
-            self.destroy()
-
-    def destroy(self):
-        paths.clear()
-        self.ok_destroy = False
-        return super().destroy()
 
 
 class FSToplevelWindow(CTkToplevel):
@@ -238,7 +134,7 @@ class FSToplevelWindow(CTkToplevel):
         self.search_by_type = BooleanVar()
         self.color = "#5f1842"
         self.config(background=self.color)
-        self.iconbitmap('pngwing.ico')
+        self.iconbitmap(icon)
         self.title("File search")
         self.minsize(560, 100),
         self.maxsize(560, 100)
@@ -246,10 +142,10 @@ class FSToplevelWindow(CTkToplevel):
             master=self,
             width=385,
             height=30,
-            fg_color="#ffffff",
-            border_color="#ffffff",
-            text_color="black",
-            font=("Arial", 15, "bold"),
+            fg_color=entry_color,
+            border_color=entry_bordercolor,
+            text_color=entry_textcolor,
+            font=entry_font,
             placeholder_text="type all if you want to search all partitions"
         )
         self.path_entry.bind("<FocusIn>", self.path_entry_var)
@@ -258,10 +154,10 @@ class FSToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Open directory",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.path_getter,
         )
         self.ok_btn = CTkButton(
@@ -269,10 +165,10 @@ class FSToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Ok",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.ok_destroy,
         )
         self.cancel_btn = CTkButton(
@@ -280,10 +176,10 @@ class FSToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Cancel",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.destroy,
         )
         self.search_type = CTkCheckBox(
@@ -292,7 +188,7 @@ class FSToplevelWindow(CTkToplevel):
             height=30,
             bg_color=self.color,
             text="Search by type",
-            font=("Arial", 20, "bold"),
+            font=button_font,
             variable=self.search_by_type
         )
         self.search_entry = CTkEntry(
@@ -300,18 +196,18 @@ class FSToplevelWindow(CTkToplevel):
             width=385,
             height=30,
             bg_color=self.color,
-            fg_color="#ffffff",
-            border_color="#ffffff",
-            text_color="black",
+            fg_color=entry_color,
+            border_color=entry_bordercolor,
+            text_color=entry_textcolor,
             placeholder_text="Name of the file or type",
-            font=("Arial", 15, "bold"),
+            font=entry_font,
             textvariable=self.search
         )
         self.waiting_label = CTkLabel(
             master=self,
             text="It may take some time please wait",
-            text_color="black",
-            fg_color="#5f1842"
+            text_color=entry_textcolor,
+            fg_color=label_color
         )
         self.ok_btn.place(x=390, y=40)
         self.cancel_btn.place(x=470, y=40)
@@ -362,7 +258,7 @@ class EFDToplevelWindow(CTkToplevel):
         self.nested_bool = BooleanVar()
         self.color = "#5f1842"
         self.config(background=self.color)
-        self.iconbitmap('pngwing.ico')
+        self.iconbitmap(icon)
         self.title("Empty folder deleter")
         self.minsize(560, 100)
         self.maxsize(560, 100)
@@ -370,10 +266,10 @@ class EFDToplevelWindow(CTkToplevel):
             master=self,
             width=385,
             height=30,
-            fg_color="#ffffff",
-            border_color="#ffffff",
-            text_color="black",
-            font=("Arial", 15, "bold"),
+            fg_color=entry_color,
+            border_color=entry_bordercolor,
+            text_color=entry_textcolor,
+            font=entry_font,
             textvariable=self.path
         )
         self.open_dir_btn = CTkButton(
@@ -381,10 +277,10 @@ class EFDToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Open directory",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.path_getter,
         )
         self.ok_btn = CTkButton(
@@ -392,10 +288,10 @@ class EFDToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Ok",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.ok_destroy,
         )
         self.cancel_btn = CTkButton(
@@ -403,10 +299,10 @@ class EFDToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Cancel",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.destroy,
         )
         self.Newfolder_only = CTkCheckBox(
@@ -415,7 +311,7 @@ class EFDToplevelWindow(CTkToplevel):
             height=30,
             bg_color=self.color,
             text="Delete \"New folder(s)\" only",
-            font=("Arial", 20, "bold"),
+            font=checkbox_font,
             variable=self.NF_only_bool
         )
         self.Nested_only = CTkCheckBox(
@@ -424,7 +320,7 @@ class EFDToplevelWindow(CTkToplevel):
             height=30,
             bg_color=self.color,
             text="Apply on nested folders",
-            font=("Arial", 20, "bold"),
+            font=button_font,
             variable=self.nested_bool
         )
         self.ok_btn.place(x=390, y=40)
@@ -470,18 +366,18 @@ class DMToplevelWindow(CTkToplevel):
         self.path = StringVar()
         self.color = "#5f1842"
         self.config(background=self.color)
-        self.iconbitmap('pngwing.ico')
+        self.iconbitmap(icon)
         self.title("Folders creator")
         self.minsize(560, 250)
         self.maxsize(560, 250)
         self.path_entry = CTkEntry(
             master=self,
             width=385,
-            font=("Arial", 15, "bold"),
             height=30,
-            fg_color="#ffffff",
-            border_color="#ffffff",
-            text_color="black",
+            font=entry_font,
+            fg_color=entry_color,
+            border_color=entry_bordercolor,
+            text_color=entry_textcolor,
             textvariable=self.path
         )
         self.open_dir_btn = CTkButton(
@@ -489,10 +385,10 @@ class DMToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Open directory",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.path_getter,
         )
         self.ok_btn = CTkButton(
@@ -500,10 +396,10 @@ class DMToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Ok",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.ok_destroy,
         )
         self.cancel_btn = CTkButton(
@@ -511,23 +407,23 @@ class DMToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Cancel",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.destroy,
         )
         self.names_label = CTkLabel(
             master=self,
             text="Directories names:",
-            fg_color="#5f1842",
-            font=("Arial", 20, "bold"),
+            fg_color=label_color,
+            font=button_font,
             bg_color="transparent"
         )
         self.names_note_label = CTkLabel(
             master=self,
             text="if you want to create\nnested directories use \"\\\" in between\ne.g(New folder \\ New folder 1\nNew folder \\ New folder 2)",
-            fg_color="#5f1842",
+            fg_color=label_color,
             font=("Arial", 14),
             bg_color="transparent"
         )
@@ -535,10 +431,10 @@ class DMToplevelWindow(CTkToplevel):
             master=self,
             width=310,
             height=200,
-            fg_color="#ffffff",
-            text_color="black",
-            border_color="black",
-            border_width=1.2,
+            fg_color=entry_color,
+            text_color=entry_textcolor,
+            border_color=button_bordercolor,
+            border_width=button_borderwidth,
 
         )
         self.ok_btn.place(x=5, y=140)
@@ -586,7 +482,7 @@ class OrganizerToplevelWindow(CTkToplevel):
         self.paths = StringVar()
         self.color = "#5f1842"
         self.config(background=self.color)
-        self.iconbitmap('pngwing.ico')
+        self.iconbitmap(icon)
         self.title("Organizer")
         self.minsize(520, 120)
         self.maxsize(520, 120)
@@ -594,10 +490,10 @@ class OrganizerToplevelWindow(CTkToplevel):
             master=self,
             width=300,
             height=30,
-            font=("Arial", 15, "bold"),
-            fg_color="#ffffff",
-            border_color="#ffffff",
-            text_color="black",
+            font=entry_font,
+            fg_color=entry_color,
+            border_color=entry_bordercolor,
+            text_color=entry_textcolor,
             textvariable=self.paths
         )
         self.open_dir_btn = CTkButton(
@@ -605,10 +501,10 @@ class OrganizerToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Open directory",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.path_getter,
         )
         self.confirm_dir_btn = CTkButton(
@@ -616,10 +512,10 @@ class OrganizerToplevelWindow(CTkToplevel):
             width=30,
             height=30,
             text="✔",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.confirm_dir,
         )
         self.combobox = ttk.Combobox(
@@ -630,8 +526,8 @@ class OrganizerToplevelWindow(CTkToplevel):
         self.directory_label = CTkLabel(
             master=self,
             text="Directories :",
-            fg_color="#5f1842",
-            font=("Arial", 20, "bold"),
+            fg_color=label_color,
+            font=label_font,
             bg_color="transparent"
         )
         self.del_selected_btn = CTkButton(
@@ -639,10 +535,10 @@ class OrganizerToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Delete selected",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.delete,
         )
         self.ok_btn = CTkButton(
@@ -650,10 +546,10 @@ class OrganizerToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Ok",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.ok_destroy,
         )
         self.cancel_btn = CTkButton(
@@ -661,10 +557,10 @@ class OrganizerToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Cancel",
-            fg_color="#02db06",
-            font=("Arial", 20, "bold"),
-            hover_color="#067d08",
-            text_color="white",
+            fg_color=button_color,
+            font=button_font,
+            hover_color=button_hovercolor,
+            text_color=button_textcolor,
             command=self.destroy,
         )
         self.path_entry.grid(row=0, column=0, columnspan=2,
