@@ -70,5 +70,10 @@ class FileOrgnizer(object):
             for key, value in filename_extension_dictionarie.items():
                 if file[1] in key:
                     file.append(value)
-            move(f"{self.path}\\{file[0]}", f"{self.path}\\{file[2]}")
+            print(file[0])
+            try:
+                move(f"{self.path}\\{file[0]}", f"{self.path}\\{file[2]}")
+            except:
+                print("file's extension isn't known please add it in Filename_Extension_Dictionarie")
         return self
+

@@ -36,6 +36,7 @@ def gui(x):
 
 
 def FR(gui_path):
+    print(gui_path)
     path = gui_path[0]
     path = path.replace("/", "\\")
     rec_names = []
@@ -105,4 +106,4 @@ def FR(gui_path):
             temp = source[:source.rfind("\\")]
             os.rename((f"{source}"), f"{temp}\\{rec_names}")
             del temp
-FR()
+FR(r"C:\Users\killer\Desktop\OS-directory-manager-main")

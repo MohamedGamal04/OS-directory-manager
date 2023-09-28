@@ -7,11 +7,12 @@ filename_extension_dictionarie={("png","jpg","jpeg","webp"):"Photos",
                         ("pptx","pot","ppa","pps","ppsm","ppsx","ppt","pptm"):"Power Point",
                         ("xlsx","xls","xla","xlsm","xlt"):"Excel",
                         ("accdb"):"Access",
-                        ("lnk"):"Short cuts",
+                        ("lnk","url"):"Short cuts",
                         ("gif"):"Gifs",
                         ("pdf"):"PDFs",
                         ("exe","msi"):"Programmes",
                         ("txt"):"Text files",
                         ("rar","zip"):"Archive files",
+                        ("psd"):"Photoshop",
                         ("mp3"):"Archive files"
                         }
