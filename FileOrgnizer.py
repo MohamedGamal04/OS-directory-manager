@@ -1,44 +1,73 @@
-from os import listdir, makedirs
+import os
 from shutil import move
-from typing import List
-from Filename_Extension_Dictionarie import filename_extension_dictionarie
+from tkinter import messagebox
+import pickle
+file_extensions = {("png", "jpg", "jpeg", "webp"): "Photos",
+                   ("webm", "mkv", "avi", "wmv", "mp3", "mp4", "mp2", "mov", "mpe", "mpv", "m3u8"): "Videos",
+                   ("wav", "opus"): "Audios",
+                   ("torrent"): "Torrents",
+                   ("otf", "ttf"): "Fonts",
+                   ("prfpset"): "Premiere",
+                   ("ms14"): "Cirucits",
+                   ("dll"): "Dlls",
+                   ("apk"): "Files",
+                   ("docx", "doc", "docm", "dot", "dotm", "dotx", "rtf"): "Word",
+                   ("pptx", "pot", "ppa", "pps", "ppsm", "ppsx", "ppt", "pptm"): "Power Point",
+                   ("xlsx", "xls", "xla", "xlsm", "xlt"): "Excel",
+                   ("accdb"): "Access",
+                   ("lnk", "url"): "Short cuts",
+                   ("gif"): "Gifs",
+                   ("pdf"): "PDFs",
+                   ("exe", "msi"): "Programmes",
+                   ("txt"): "Text files",
+                   ("rar", "zip"): "Archive files",
+                   ("psd"): "Photoshop",
+                   ("mp3"): "Archive files"
+                   }
 
 
-def FOmain(gui_paths: List[str]):
-    paths = gui_paths
-    instance = []
-    num_of_instance = len(paths)
-    for i in zip(range(num_of_instance), paths):
-        instance.append(i[0])
-        instance[i[0]] = FileOrgnizer(i[1])
-    for i in range(num_of_instance):
-        instance[i].explore_path().categorization().make_dirs().move_files()
-    for i in range(num_of_instance):
-        instance.clear()
+def FOmain(gui_paths: list[str], organize_folders: bool,to_folder: bool):
+    if to_folder:
+        instance = Fileorganizer(gui_paths[0],gui_paths[1])
+    else: instance = Fileorganizer(gui_paths[0])
+    instance.explore_path(
+            organize_folders).categorization().make_dirs().move_files()
 
 
-class FileOrgnizer(object):
+class Fileorganizer(object):
     """
         This class is used to organize different files by moving them into different directories
     """
 
-    def __init__(self, path) -> None:
+    def __init__(self, path, sec_path = None) -> None:
         self.extensions = []
         self.files = []
         self.dir_names = []
-        path =path.replace("/","\\")
+        self.sec_path = None
+        if sec_path is not None:
+            sec_path = sec_path.replace("/", "\\")
+            self.sec_path = sec_path
+        path = path.replace("/", "\\")
         self.path = path
-        
 
-    def explore_path(self) -> None:
+    def explore_path(self, organize_folders) -> None:
         """
             this function is used to explore the chosen path and record the file and it's extension
         """
         try:
-            for file_name in listdir(path=self.path):
-                if (file_name.rfind(".") != -1):
+            for file_name in os.listdir(path=self.path):
+                if os.path.isdir(self.path+'\\'+file_name) and organize_folders:
+                    if not(file_name in file_extensions.values()):
+                        if self.sec_path is not None:
+                            move(f"{self.path}\\{file_name}",
+                             f"{self.sec_path}\\Folders\\{file_name}")
+                        else:
+                            move(f"{self.path}\\{file_name}",
+                                f"{self.path}\\Folders\\{file_name}")
+                elif (file_name.rfind(".") != -1):
                     self.extensions.append(file_name[file_name.rfind(".")+1:])
                     self.files.append([file_name, self.extensions[-1]])
+
             return self
         except FileNotFoundError:
             return self
@@ -47,7 +76,7 @@ class FileOrgnizer(object):
         """
             this function is used to categorize each file extension e.g(png -> Photos)
         """
-        for key, value in filename_extension_dictionarie.items():
+        for key, value in file_extensions.items():
             for _ in self.extensions:
                 if _ in key:
                     self.dir_names.append(value)
@@ -59,7 +88,7 @@ class FileOrgnizer(object):
              this function is used to make directories to move the files with the same category into it
         """
         for dir_name in self.dir_names:
-            makedirs(f"{self.path}\\{dir_name}", exist_ok=True)
+            os.makedirs(f"{self.path}\\{dir_name}", exist_ok=True)
         return self
 
     def move_files(self) -> None:
@@ -67,13 +96,16 @@ class FileOrgnizer(object):
              this function is used to move the files
         """
         for file in self.files:
-            for key, value in filename_extension_dictionarie.items():
+            for key, value in file_extensions.items():
+                file[1] = file[1].lower()
                 if file[1] in key:
                     file.append(value)
-            print(file[0])
             try:
-                move(f"{self.path}\\{file[0]}", f"{self.path}\\{file[2]}")
+                if self.sec_path is not None:
+                    move(f"{self.path}\\{file[0]}", f"{self.sec_path}\\{file[2]}")
+                else:
+                    move(f"{self.path}\\{file[0]}", f"{self.path}\\{file[2]}")
             except:
-                print("file's extension isn't known please add it in Filename_Extension_Dictionarie")
+                messagebox.showerror(
+                    "Move error", f"Failed to move {file[0]} extension unknown")
         return self
-

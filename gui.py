@@ -2,6 +2,7 @@ from typing import Tuple
 from customtkinter import *
 from tkinter import filedialog, ttk, messagebox
 from PIL import Image
+import tomlkit
 from Folder_Manager_Config import *
 import webbrowser
 
@@ -476,24 +477,24 @@ class DMToplevelWindow(CTkToplevel):
 
 class OrganizerToplevelWindow(CTkToplevel):
     first_time = True
-
     def __init__(self, *args, fg_color: str | Tuple[str, str] | None = None, **kwargs):
         super().__init__(*args, fg_color=fg_color, **kwargs)
+        self.iconbitmap('icon.ico')
+        self.title("File Organizer")
+        self.first_time = True
         self.paths = StringVar()
-        self.color = "#5f1842"
-        self.config(background=self.color)
-        self.iconbitmap(icon)
-        self.title("Organizer")
-        self.minsize(520, 120)
-        self.maxsize(520, 120)
+        self.organize_folders_bool = BooleanVar()
+        self.organize_to_path_bool = BooleanVar()
+        self.minsize(470, 160)
+        self.maxsize(470, 160)
         self.path_entry = CTkEntry(
             master=self,
             width=300,
             height=30,
-            font=entry_font,
-            fg_color=entry_color,
-            border_color=entry_bordercolor,
-            text_color=entry_textcolor,
+            font=("Arial", 15, ),
+            fg_color="#ffffff",
+            border_color="#ffffff",
+            text_color="black",
             textvariable=self.paths
         )
         self.open_dir_btn = CTkButton(
@@ -501,55 +502,15 @@ class OrganizerToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Open directory",
-            fg_color=button_color,
-            font=button_font,
-            hover_color=button_hovercolor,
-            text_color=button_textcolor,
+            font=("Arial", 20, "bold"),
             command=self.path_getter,
-        )
-        self.confirm_dir_btn = CTkButton(
-            master=self,
-            width=30,
-            height=30,
-            text="✔",
-            fg_color=button_color,
-            font=button_font,
-            hover_color=button_hovercolor,
-            text_color=button_textcolor,
-            command=self.confirm_dir,
-        )
-        self.combobox = ttk.Combobox(
-            master=self,
-            width=60,
-            values=paths,
-        )
-        self.directory_label = CTkLabel(
-            master=self,
-            text="Directories :",
-            fg_color=label_color,
-            font=label_font,
-            bg_color="transparent"
-        )
-        self.del_selected_btn = CTkButton(
-            master=self,
-            width=50,
-            height=30,
-            text="Delete selected",
-            fg_color=button_color,
-            font=button_font,
-            hover_color=button_hovercolor,
-            text_color=button_textcolor,
-            command=self.delete,
         )
         self.ok_btn = CTkButton(
             master=self,
             width=50,
             height=30,
             text="Ok",
-            fg_color=button_color,
-            font=button_font,
-            hover_color=button_hovercolor,
-            text_color=button_textcolor,
+            font=("Arial", 20, "bold"),
             command=self.ok_destroy,
         )
         self.cancel_btn = CTkButton(
@@ -557,71 +518,131 @@ class OrganizerToplevelWindow(CTkToplevel):
             width=50,
             height=30,
             text="Cancel",
-            fg_color=button_color,
-            font=button_font,
-            hover_color=button_hovercolor,
-            text_color=button_textcolor,
+            font=("Arial", 20, "bold"),
             command=self.destroy,
+        )
+        self.Organize_folders = CTkCheckBox(
+            master=self,
+            width=50,
+            height=30,
+            text="Organize Folders",
+            font=("Arial", 20, "bold"),
+            variable=self.organize_folders_bool
+        )
+        self.Organize_to_path = CTkCheckBox(
+            master=self,
+            width=50,
+            height=30,
+            text="Organize to another path",
+            font=("Arial", 20, "bold"),
+            variable=self.organize_to_path_bool,
+            command=self.OTP
         )
         self.path_entry.grid(row=0, column=0, columnspan=2,
                              sticky=W, pady=2, padx=2)
         self.open_dir_btn.grid(row=0, column=2, sticky=W, pady=2, padx=2)
-        self.confirm_dir_btn.place(x=470, y=2)
-        self.directory_label.grid(row=1, column=0, sticky=W, pady=5, padx=2)
-        self.combobox.grid(row=1, column=1, columnspan=2, pady=5, padx=2)
-        self.del_selected_btn.grid(
-            row=2, column=1, columnspan=2, pady=1, padx=2)
-        self.ok_btn.place(x=5, y=72)
-        self.cancel_btn.place(x=90, y=72)
+        self.Organize_folders.place(x=5, y=38)
+        self.Organize_to_path.place(x=5, y=78)
+        self.ok_btn.place(x=5, y=122)
+        self.cancel_btn.place(x=90, y=122)
         self.grab_set()
 
-    def path_getter(self):
-        global path
-        path = filedialog.askdirectory()
-        self.paths.set(path)
+    def OTP(self):
+            if self.organize_to_path_bool.get():
+                self.minsize(530, 190)
+                self.maxsize(530, 190)
+                self.sec_path = StringVar()
+                self.sec_path_entry = CTkEntry(
+                    master=self,
+                    width=300,
+                    height=30,
+                    font=("Arial", 15, ),
+                    fg_color="#ffffff",
+                    border_color="#ffffff",
+                    text_color="black",
+                    textvariable=self.sec_path
+                )
+                self.sec_open_dir_btn = CTkButton(
+                    master=self,
+                    width=50,
+                    height=30,
+                    text="Open directory",
+                    font=("Arial", 20, "bold"),
+                    command=self.sec_path_getter,
+                )
+                self.from_label = CTkLabel(
+                    master=self,
+                    width=50,
+                    height=30,
+                    text="From:",
+                    font=("Arial", 20, "bold"),
+                )
+                self.to_label = CTkLabel(
+                    master=self,
+                    width=50,
+                    height=30,
+                    text="To:",
+                    font=("Arial", 20, "bold"),
+                )
+                self.from_label.grid(row=0, column=0, sticky=W, pady=2, padx=2)
+                self.to_label.grid(row=1, column=0, sticky=W, pady=2, padx=2)
+                self.path_entry.grid(row=0, column=1, columnspan=2,
+                                     sticky=W, pady=2, padx=2)
+                self.open_dir_btn.grid(
+                    row=0, column=3, sticky=W, pady=2, padx=2)
+                self.sec_path_entry.grid(row=1, column=1, columnspan=2,
+                                         sticky=W, pady=2, padx=2)
+                self.sec_open_dir_btn.grid(
+                    row=1, column=3, sticky=W, pady=2, padx=2)
+                self.Organize_folders.place(x=5, y=78)
+                self.Organize_to_path.place(x=5, y=118)
+                self.ok_btn.place(x=5, y=152)
+                self.cancel_btn.place(x=90, y=152)
+                self.grab_set()
+            else:
+                self.minsize(470, 160)
+                self.maxsize(470, 160)
+                self.from_label.destroy()
+                self.to_label.destroy()
+                self.sec_path_entry.destroy()
+                self.sec_open_dir_btn.destroy()
+                self.path_entry.grid(row=0, column=0, columnspan=2,
+                                     sticky=W, pady=2, padx=2)
+                self.open_dir_btn.grid(
+                    row=0, column=2, sticky=W, pady=2, padx=2)
+                self.Organize_folders.place(x=5, y=38)
+                self.Organize_to_path.place(x=5, y=78)
+                self.ok_btn.place(x=5, y=122)
+                self.cancel_btn.place(x=90, y=122)
+                self.grab_set()
 
-    def confirm_dir(self):
-        global paths
-        if not os.path.exists(self.paths.get()):
-            messagebox.showerror("Path error", "Empty or invalid path")
-        else:
-            if self.paths.get() != "":
-                paths.append(self.paths.get())
-                if OrganizerToplevelWindow.first_time is True:
-                    self.combobox['values'] += (
-                        self.paths.get().replace(" ", "-"))
-                    self.combobox.set((self.paths.get().replace(" ", "-")))
-                else:
-                    self.combobox['values'] += (
-                        self.paths.get().replace(" ", "-"),)
-                    self.combobox.set((self.paths.get().replace(" ", "-"),))
-                self.paths.set("")
-                OrganizerToplevelWindow.first_time = False
+    def path_getter(self):
+            path = filedialog.askdirectory()
+            self.paths.set(path)
+
+    def sec_path_getter(self):
+            path = filedialog.askdirectory()
+            self.sec_path.set(path)
 
     def ok_destroy(self):
-        if paths == []:
-            messagebox.showerror("Path error", "Empty or invalid path")
-        else:
-            self.ok_destroy = True
-            from FileOrgnizer import FOmain
-            FOmain(paths)
-            paths.clear()
-            self.destroy()
+            if not os.path.exists(self.paths.get()):
+                messagebox.showerror("Path error", "Empty or invalid path")
+            else:
+                self.ok_destroy = True
+                paths.append(self.paths.get())
+                if self.organize_to_path_bool.get():
+                    paths.append(self.sec_path.get())
+                from FileOrgnizer import FOmain
+                FOmain(paths, self.organize_folders_bool.get(),self.organize_to_path_bool.get())
+                paths.clear()
+                self.destroy()
 
     def destroy(self):
-        if self.ok_destroy is not True:
-            paths.clear()
-        self.ok_destroy = False
-        return super().destroy()
+            if self.ok_destroy is not True:
+                paths.clear()
+            self.ok_destroy = False
+            return super().destroy()
 
-    def delete(self):
-        temp = []
-        paths.remove(self.combobox.get().replace("-", " "))
-        for i in self.combobox['values']:
-            if(i != self.combobox.get()):
-                temp.append(i)
-        self.combobox['values'] = temp
-        self.combobox.delete(0, 'end')
 
 
 paths = []
